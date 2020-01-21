@@ -15,12 +15,11 @@ RUN apt-get update && \
 RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))"
 RUN R -e "remotes::install_version('renv', version = '0.9.2', repos = c(CRAN = 'https://cloud.r-project.org'))"
 
+# Copy files to image
+COPY renv.lock script.R project/
+
 WORKDIR project/
 
-# Copy files to image
-COPY renv.lock renv.lock
-
 RUN R -e 'renv::consent(provided = TRUE);renv::restore()'
-#RUN Rscript "script.R"
 
 CMD ["/bin/bash"]
