@@ -10,16 +10,11 @@ RUN apt-get update && \
     zlib1g-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
+    
 # Install renv
 RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))"
-RUN R -e "remotes::install_version('renv', version = '0.9.2', repos = c(CRAN = 'https://cloud.r-project.org'))"
+RUN R -e "remotes::install_version('renv', version = '0.9.2', repos = 'https://cloud.r-project.org')"
 
-# Copy files to image
-COPY renv.lock script.R project/
-
-WORKDIR project/
-
-RUN R -e 'renv::consent(provided = TRUE);renv::restore()'
-
-CMD ["/bin/bash"]
+WORKDIR /project
+COPY renv.lock renv.lock
+RUN R -e "renv::restore()"
