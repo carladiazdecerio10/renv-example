@@ -15,6 +15,12 @@ RUN apt-get update && \
 RUN R -e "install.packages('remotes', repos = c(CRAN = 'https://cloud.r-project.org'))"
 RUN R -e "remotes::install_version('renv', version = '0.9.2', repos = 'https://cloud.r-project.org')"
 
+COPY renv.lock /project/renv.lock
+
 WORKDIR /project
-COPY renv.lock renv.lock
-RUN R -e "renv::restore()"
+
+RUN R -e 'renv::restore(repos = c(CRAN = "https://cloud.r-project.org"))'
+
+COPY script.R script.R
+
+CMD Rscript script.R
