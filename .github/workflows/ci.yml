@@ -1,0 +1,18 @@
+name: Restore renv on GitHub Actions
+
+on: [push, pull_request]
+
+jobs:
+  restore-renv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-renv@v2
+
+      - name: Verificar estado de renv
+        run: Rscript -e 'renv::status()'
+
+      - name: Ejecutar script de prueba
+        run: Rscript -e 'source("script.R")' 
